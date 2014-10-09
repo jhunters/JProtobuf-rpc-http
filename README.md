@@ -27,10 +27,12 @@ a 在Spring配置文件，定义IDLServiceExporter服务发布配置
 
 	<bean id="simpleIDLInvoker" class="com.baidu.bjf.SimpleIDLInvoker"></bean>
 ```
+<pre>
 inputIDL 属性表示接收的protobuf协议定义
 outputIDL 属性表示返回的protobuf协议定义
 serviceName 服务名称，必须填写。 在服务的servlet发布后，服务名称会以path路径方式查找
 invoker 服务回调实现，必须实现 com.baidu.jprotobuf.rpc.server.ServerInvoker接口
+</pre>
 
 ```java
 public interface ServerInvoker {
@@ -157,7 +159,7 @@ message StringMessage2 {
 	<bean id="simpleTestClientForIDLProxy" class="com.baidu.jprotobuf.rpc.client.IDLProxyFactoryBean">
 		<property name="inputIDL" value="classpath:/simplestring.proto"></property>
 		<property name="outputIDL" value="classpath:/simplestring.proto"></property>
-		**<property name="inputIDLObjectName" value="StringMessage"></property>**
+		<property name="inputIDLObjectName" value="StringMessage"></property>
 		<property name="serviceUrl" value="http://localhost:8080/myfirstproject/remoting/SimpleIDLTest"></property>
 	</bean>
 ```
