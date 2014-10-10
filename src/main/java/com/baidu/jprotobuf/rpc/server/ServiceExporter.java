@@ -13,46 +13,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.baidu.jprotobuf.rpc.exception;
+package com.baidu.jprotobuf.rpc.server;
+
+import com.baidu.bjf.remoting.protobuf.IDLProxyObject;
 
 /**
+ * ServiceExporter interface. 
+ * All implements ServiceExporter class will be auto detected by {@link HttpRequestHandlerServlet}
  *
  * @author xiemalin
- *
+ * @since 1.2.0
+ * @see HttpRequestHandlerServlet
  */
-public class RPCMethodInvalidException extends RuntimeException {
+public interface ServiceExporter {
 
+    
     /**
-     * serial Version UID
-     */
-    private static final long serialVersionUID = 7742101650315467823L;
-
-    /**
+     * execute service action.
      * 
+     * @param input
+     * @return
+     * @throws Exception
      */
-    public RPCMethodInvalidException() {
-    }
-
+    IDLProxyObject execute(IDLProxyObject input) throws Exception;
+    
+    
     /**
-     * @param message
+     * get RPC service input proxy object
+     * 
+     * @return
      */
-    public RPCMethodInvalidException(String message) {
-        super(message);
-    }
-
+    IDLProxyObject getInputProxyObject();
+    
     /**
-     * @param cause
+     * get service name
+     * 
+     * @return
      */
-    public RPCMethodInvalidException(Throwable cause) {
-        super(cause);
-    }
-
-    /**
-     * @param message
-     * @param cause
-     */
-    public RPCMethodInvalidException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
+    String getServiceName() ;
 }

@@ -20,7 +20,7 @@ import com.baidu.jprotobuf.rpc.support.IOUtils;
  * @author xiemalin
  * @since 1.0.0
  */
-public class IDLServiceExporter implements InitializingBean {
+public class IDLServiceExporter implements ServiceExporter, InitializingBean {
 
     private String serviceName;
 
@@ -76,7 +76,7 @@ public class IDLServiceExporter implements InitializingBean {
      * 
      * @return the serviceName
      */
-    protected String getServiceName() {
+    public String getServiceName() {
         return serviceName;
     }
 
@@ -126,7 +126,7 @@ public class IDLServiceExporter implements InitializingBean {
      * get the inputIDLProxyObject
      * @return the inputIDLProxyObject
      */
-    protected IDLProxyObject getInputIDLProxyObject() {
+    public IDLProxyObject getInputProxyObject() {
         if (inputIDLProxyObject != null) {
             return inputIDLProxyObject.newInstnace();
         }

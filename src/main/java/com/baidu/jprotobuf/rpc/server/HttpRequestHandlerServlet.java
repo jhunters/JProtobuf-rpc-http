@@ -43,17 +43,17 @@ public class HttpRequestHandlerServlet extends HttpServlet {
      */
     private static final Logger LOGGER = Logger.getLogger(HttpRequestHandlerServlet.class);
     
-    private Map<String, IDLServiceExporter> serviceMap;
+    private Map<String, ServiceExporter> serviceMap;
     
     public void init() throws ServletException {
         WebApplicationContext wac = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
         
-        serviceMap = new HashMap<String, IDLServiceExporter>();
+        serviceMap = new HashMap<String, ServiceExporter>();
         
-        Map<String, IDLServiceExporter> beans = wac.getBeansOfType(IDLServiceExporter.class);
+        Map<String, ServiceExporter> beans = wac.getBeansOfType(ServiceExporter.class);
         if (beans != null) {
-            Collection<IDLServiceExporter> services = beans.values();
-            for (IDLServiceExporter idlServiceExporter : services) {
+            Collection<ServiceExporter> services = beans.values();
+            for (ServiceExporter idlServiceExporter : services) {
                 serviceMap.put(idlServiceExporter.getServiceName(), idlServiceExporter);
                 
                 if (LOGGER.isInfoEnabled()) {
@@ -85,9 +85,9 @@ public class HttpRequestHandlerServlet extends HttpServlet {
         }
         
         try {
-            IDLServiceExporter idlServiceExporter = serviceMap.get(context);
+            ServiceExporter idlServiceExporter = serviceMap.get(context);
             
-            IDLProxyObject inputIDLProxyObject = idlServiceExporter.getInputIDLProxyObject();
+            IDLProxyObject inputIDLProxyObject = idlServiceExporter.getInputProxyObject();
             IDLProxyObject input = null;
             if (inputIDLProxyObject != null && request.getContentLength() > 0) {
                 byte[] bytes = readStream(request.getInputStream(), request
