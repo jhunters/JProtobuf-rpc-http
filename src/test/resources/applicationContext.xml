@@ -15,6 +15,13 @@
 		<property name="outputIDL" value="classpath:/simplestring.proto"></property>	
 	</bean>
 
+	<bean class="com.baidu.jprotobuf.rpc.server.AnnotationServiceExporter">
+		<property name="serviceName" value="SimpleIDLTest2"></property>
+		<property name="invoker" ref="simpleIDLInvoker"></property>
+		<property name="inputClass" value="com.baidu.bjf.remoting.protobuf.FieldType.StringMessagePOJO"></property>
+		<property name="outputClass" value="com.baidu.bjf.remoting.protobuf.FieldType.StringMessagePOJO"></property>	
+	</bean>
+
 	<bean id="simpleIDLInvoker" class="com.baidu.bjf.SimpleIDLInvoker"></bean>
 	
 	<bean id="simpleTestClientForIDLProxy" class="com.baidu.jprotobuf.rpc.client.IDLProxyFactoryBean">

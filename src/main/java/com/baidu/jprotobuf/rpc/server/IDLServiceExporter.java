@@ -16,15 +16,13 @@ import com.baidu.jprotobuf.rpc.support.IDLProxyCreator;
 import com.baidu.jprotobuf.rpc.support.IOUtils;
 
 /**
+ * Export protobuf RPC service for IDL script file
  * 
  * @author xiemalin
  * @since 1.0.0
+ * @see HttpRequestHandlerServlet
  */
-public class IDLServiceExporter implements ServiceExporter, InitializingBean {
-
-    private String serviceName;
-
-    private ServerInvoker invoker;
+public class IDLServiceExporter extends AbstractServiceExporter implements InitializingBean  {
 
     /**
      * input protobuf IDL
@@ -52,44 +50,6 @@ public class IDLServiceExporter implements ServiceExporter, InitializingBean {
 
     private IDLProxyObject outputIDLProxyObject;
 
-    /**
-     * get the invoker
-     * 
-     * @return the invoker
-     */
-    protected ServerInvoker getInvoker() {
-        return invoker;
-    }
-
-    /**
-     * set invoker value to invoker
-     * 
-     * @param invoker
-     *            the invoker to set
-     */
-    public void setInvoker(ServerInvoker invoker) {
-        this.invoker = invoker;
-    }
-
-    /**
-     * get the serviceName
-     * 
-     * @return the serviceName
-     */
-    public String getServiceName() {
-        return serviceName;
-    }
-
-    /**
-     * set serviceName value to serviceName
-     * 
-     * @param serviceName
-     *            the serviceName to set
-     */
-    public void setServiceName(String serviceName) {
-        this.serviceName = serviceName;
-    }
-
     /*
      * (non-Javadoc)
      * 
@@ -98,8 +58,8 @@ public class IDLServiceExporter implements ServiceExporter, InitializingBean {
      */
     @Override
     public void afterPropertiesSet() throws Exception {
-        Assert.notNull(invoker, "property 'invoker' is null.");
-        Assert.hasText(serviceName, "property 'serviceName' is blank.");
+        Assert.notNull(getInvoker(), "property 'invoker' is null.");
+        Assert.hasText(getServiceName(), "property 'serviceName' is blank.");
         
         String inputIDLStr = null;
         if (inputIDL != null) {
@@ -116,9 +76,9 @@ public class IDLServiceExporter implements ServiceExporter, InitializingBean {
         outputIDLProxyObject = idlProxyCreator.getOutputProxyObject(outputIDLObjectName);
     }
 
-    public IDLProxyObject execute(IDLProxyObject inputIDLProxyObject) throws Exception {
+    public IDLProxyObject execute(IDLProxyObject input) throws Exception {
         IDLProxyObject output = getOutputIDLProxyObject();
-        invoker.invoke(inputIDLProxyObject, output);
+        getInvoker().invoke(input, output);
         return output;
     }
 

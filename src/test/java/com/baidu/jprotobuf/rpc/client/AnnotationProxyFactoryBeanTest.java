@@ -30,7 +30,7 @@ public class AnnotationProxyFactoryBeanTest {
         AnnotationProxyFactoryBean<StringMessagePOJO, StringMessagePOJO> factoryBean;
         
         factoryBean = new AnnotationProxyFactoryBean<StringMessagePOJO, StringMessagePOJO>();
-        factoryBean.setServiceUrl("http://localhost:8080/myfirstproject/remoting/SimpleIDLTest");
+        factoryBean.setServiceUrl("http://localhost:8080/myfirstproject/remoting/SimpleIDLTest2");
         
         factoryBean.setInputClass(StringMessagePOJO.class);
         factoryBean.setOutputClass(StringMessagePOJO.class);
