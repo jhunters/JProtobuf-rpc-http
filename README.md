@@ -124,8 +124,61 @@ RPC客户端使用IDLProxyFactoryBean进行访问，示例代码如下：
        
     }
 ```
-### RPC客户端Spring配置 ###
+RPC客户端使用AnnotationProxyFactoryBean进行访问，示例代码如下：
+```java
+    @Test
+    public void testClientProxy() throws Exception {
+        AnnotationProxyFactoryBean<StringMessagePOJO, StringMessagePOJO> factoryBean;
+        
+        factoryBean = new AnnotationProxyFactoryBean<StringMessagePOJO, StringMessagePOJO>();
+        factoryBean.setServiceUrl("http://localhost:8080/myfirstproject/remoting/SimpleIDLTest");
+        
+        factoryBean.setInputClass(StringMessagePOJO.class);
+        factoryBean.setOutputClass(StringMessagePOJO.class);
+        
+        factoryBean.afterPropertiesSet();
+        
+        ClientInvoker<StringMessagePOJO, StringMessagePOJO> invoker = factoryBean.getObject();
+        
+        StringMessagePOJO input = invoker.getInput();
+        if (input != null) {
+            input.setList("how are you!");
+        }
+        
+        StringMessagePOJO output = invoker.invoke(input);
+        if (output != null) {
+            System.out.println(output.getList());
+        }
+    }
+```
+StringMessagePOJO对象代码:
+```java
+public class StringMessagePOJO {
 
+    @Protobuf(fieldType = FieldType.STRING, order = 1, required = true)
+    private String list;
+
+    /**
+     * get the list
+     * @return the list
+     */
+    public String getList() {
+        return list;
+    }
+
+    /**
+     * set list value to list
+     * @param list the list to set
+     */
+    public void setList(String list) {
+        this.list = list;
+    }
+    
+    
+}
+```
+### RPC客户端Spring配置 ###
+RPC客户端使用IDLProxyFactoryBean进行访问
 ```xml
 	<bean id="simpleTestClientForIDLProxy" class="com.baidu.jprotobuf.rpc.client.IDLProxyFactoryBean">
 		<property name="inputIDL" value="classpath:/simplestring.proto"></property>
@@ -133,6 +186,14 @@ RPC客户端使用IDLProxyFactoryBean进行访问，示例代码如下：
 		<property name="inputIDLObjectName" value="StringMessage"></property>
 		<property name="serviceUrl" value="http://localhost:8080/myfirstproject/remoting/SimpleIDLTest"></property>
 	</bean>
+```
+RPC客户端使用AnnotationProxyFactoryBean进行访问
+```xml
+	<bean id="simpleTestClientForAnnotationProxy" class="com.baidu.jprotobuf.rpc.client.AnnotationProxyFactoryBean">
+		<property name="inputClass" value="com.baidu.bjf.remoting.protobuf.FieldType.StringMessagePOJO"></property>
+		<property name="outputClass" value="com.baidu.bjf.remoting.protobuf.FieldType.StringMessagePOJO"></property>
+		<property name="serviceUrl" value="http://localhost:8080/myfirstproject/remoting/SimpleIDLTest"></property>
+	</bean>	
 ```
 
 ### 多个IDL message定义解决方案 ###

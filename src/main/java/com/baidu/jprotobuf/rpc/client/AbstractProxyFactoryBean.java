@@ -15,28 +15,18 @@
  */
 package com.baidu.jprotobuf.rpc.client;
 
-import com.baidu.bjf.remoting.protobuf.IDLProxyObject;
-
 /**
- * 
+ *
  * @author xiemalin
- * @since 1.0.0
+ * @since 1.1.0
  */
-public class IDLHttpClientInvoker implements ClientInvoker<IDLProxyObject, IDLProxyObject> {
-
-    private IDLProxyObject input;
-    private IDLProxyObject output;
-    
-    /**
-     * content encode
-     */
-    private String encoding;
+public abstract class AbstractProxyFactoryBean {
 
     /**
-     * server url
+     * service url
      */
     private String serviceUrl;
-
+    
     /**
      * connection time out
      */
@@ -46,54 +36,7 @@ public class IDLHttpClientInvoker implements ClientInvoker<IDLProxyObject, IDLPr
      * read time out
      */
     private int readTimeout = -1;
-
-    /**
-     * @param serviceUrl
-     * @param input
-     * @param output
-     */
-    public IDLHttpClientInvoker(String serviceUrl, IDLProxyObject input, IDLProxyObject output) {
-        super();
-        this.serviceUrl = serviceUrl;
-        this.input = input;
-        this.output = output;
-    }
-
-    /* (non-Javadoc)
-     * @see com.baidu.jprotobuf.rpc.client.ClientInvoker#getInput()
-     */
-    @Override
-    public IDLProxyObject getInput() {
-        if (input != null) {
-            return input.newInstnace();
-        }
-        return input;
-    }
-
-    /**
-     * set output value to output
-     * @param output the output to set
-     */
-    protected void setOutput(IDLProxyObject output) {
-        this.output = output;
-    }
-
-    /* (non-Javadoc)
-     * @see com.baidu.jprotobuf.rpc.client.ClientInvoker#invoke()
-     */
-    @Override
-    public IDLProxyObject invoke(IDLProxyObject input) throws Exception {
-        return new SimpleHttpRequestExecutor().doExecuteRequest(this, input, output);
-    }
     
-    /**
-     * set encoding value to encoding
-     * @param encoding the encoding to set
-     */
-    public void setEncoding(String encoding) {
-        this.encoding = encoding;
-    }
-
     /**
      * set serviceUrl value to serviceUrl
      * @param serviceUrl the serviceUrl to set
@@ -101,7 +44,7 @@ public class IDLHttpClientInvoker implements ClientInvoker<IDLProxyObject, IDLPr
     public void setServiceUrl(String serviceUrl) {
         this.serviceUrl = serviceUrl;
     }
-
+    
     /**
      * set connectTimeout value to connectTimeout
      * @param connectTimeout the connectTimeout to set
@@ -116,14 +59,6 @@ public class IDLHttpClientInvoker implements ClientInvoker<IDLProxyObject, IDLPr
      */
     public void setReadTimeout(int readTimeout) {
         this.readTimeout = readTimeout;
-    }
-
-    /**
-     * get the encoding
-     * @return the encoding
-     */
-    protected String getEncoding() {
-        return encoding;
     }
 
     /**
@@ -149,6 +84,6 @@ public class IDLHttpClientInvoker implements ClientInvoker<IDLProxyObject, IDLPr
     protected int getReadTimeout() {
         return readTimeout;
     }
-
+    
     
 }

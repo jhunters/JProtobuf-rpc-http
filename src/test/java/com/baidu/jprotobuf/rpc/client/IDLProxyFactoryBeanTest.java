@@ -44,7 +44,7 @@ public class IDLProxyFactoryBeanTest {
         proxyFactoryBean.setInputIDLObjectName("StringMessage");
         proxyFactoryBean.setOutputIDLObjectName("StringMessage2");
         proxyFactoryBean.afterPropertiesSet();
-        ClientInvoker invoker = proxyFactoryBean.getObject();
+        ClientInvoker<IDLProxyObject, IDLProxyObject> invoker = proxyFactoryBean.getObject();
         
         //set request param
         IDLProxyObject input = invoker.getInput();

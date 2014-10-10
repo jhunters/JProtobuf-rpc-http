@@ -28,22 +28,7 @@ import com.baidu.jprotobuf.rpc.support.IOUtils;
  * @author xiemalin
  * @since 1.0.0
  */
-public class IDLProxyFactoryBean implements FactoryBean<ClientInvoker>, InitializingBean {
-    
-    /**
-     * service url
-     */
-    private String serviceUrl;
-    
-    /**
-     * connection time out
-     */
-    private int connectTimeout = -1;
-
-    /**
-     * read time out
-     */
-    private int readTimeout = -1;
+public class IDLProxyFactoryBean extends AbstractProxyFactoryBean implements FactoryBean<ClientInvoker<IDLProxyObject, IDLProxyObject>>, InitializingBean {
     
     /**
      * input protobuf IDL
@@ -75,7 +60,7 @@ public class IDLProxyFactoryBean implements FactoryBean<ClientInvoker>, Initiali
      * @see org.springframework.beans.factory.FactoryBean#getObject()
      */
     @Override
-    public ClientInvoker getObject() throws Exception {
+    public ClientInvoker<IDLProxyObject, IDLProxyObject> getObject() throws Exception {
         return invoker;
     }
 
@@ -114,18 +99,12 @@ public class IDLProxyFactoryBean implements FactoryBean<ClientInvoker>, Initiali
         inputIDLProxyObject = idlProxyCreator.getInputProxyObject(inputIDLObjectName);
         outputIDLProxyObject = idlProxyCreator.getOutputProxyObject(outputIDLObjectName);
         
-        invoker = new IDLHttpClientInvoker(serviceUrl, inputIDLProxyObject, outputIDLProxyObject);
-        invoker.setConnectTimeout(connectTimeout);
-        invoker.setReadTimeout(readTimeout);
+        invoker = new IDLHttpClientInvoker(getServiceUrl(), inputIDLProxyObject, outputIDLProxyObject);
+        invoker.setConnectTimeout(getConnectTimeout());
+        invoker.setReadTimeout(getReadTimeout());
     }
 
-    /**
-     * set serviceUrl value to serviceUrl
-     * @param serviceUrl the serviceUrl to set
-     */
-    public void setServiceUrl(String serviceUrl) {
-        this.serviceUrl = serviceUrl;
-    }
+    
 
     /**
      * set inputIDL value to inputIDL
@@ -158,22 +137,5 @@ public class IDLProxyFactoryBean implements FactoryBean<ClientInvoker>, Initiali
     public void setOutputIDLObjectName(String outputIDLObjectName) {
         this.outputIDLObjectName = outputIDLObjectName;
     }
-
-    /**
-     * set connectTimeout value to connectTimeout
-     * @param connectTimeout the connectTimeout to set
-     */
-    protected void setConnectTimeout(int connectTimeout) {
-        this.connectTimeout = connectTimeout;
-    }
-
-    /**
-     * set readTimeout value to readTimeout
-     * @param readTimeout the readTimeout to set
-     */
-    protected void setReadTimeout(int readTimeout) {
-        this.readTimeout = readTimeout;
-    }
-
     
 }

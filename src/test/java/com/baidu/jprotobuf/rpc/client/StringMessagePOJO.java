@@ -15,23 +15,34 @@
  */
 package com.baidu.jprotobuf.rpc.client;
 
+import com.baidu.bjf.remoting.protobuf.FieldType;
+import com.baidu.bjf.remoting.protobuf.annotation.Protobuf;
 
 /**
- * 
- * RPC client handler. 
  *
  * @author xiemalin
- * @since 1.0.0
+ * @since 1.1.0
  */
-public interface ClientInvoker<I, O> {
+public class StringMessagePOJO {
 
-    I getInput();
-    
+    @Protobuf(fieldType = FieldType.STRING, order = 1, required = true)
+    private String list;
+
     /**
-     * do RPC invoke action.
-     * 
-     * @param param
-     * @return
+     * get the list
+     * @return the list
      */
-    O invoke(I input) throws Exception;
+    public String getList() {
+        return list;
+    }
+
+    /**
+     * set list value to list
+     * @param list the list to set
+     */
+    public void setList(String list) {
+        this.list = list;
+    }
+    
+    
 }
