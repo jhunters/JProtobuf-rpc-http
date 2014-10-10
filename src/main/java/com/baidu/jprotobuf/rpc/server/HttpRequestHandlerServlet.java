@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -45,12 +46,18 @@ public class HttpRequestHandlerServlet extends HttpServlet {
     
     private Map<String, ServiceExporter> serviceMap;
     
-    public void init() throws ServletException {
+    protected Map<String, ServiceExporter> getServiceExporters() {
         WebApplicationContext wac = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+        Map<String, ServiceExporter> beans = wac.getBeansOfType(ServiceExporter.class);
+        return beans;
+    }
+    
+    public void init() throws ServletException {
         
         serviceMap = new HashMap<String, ServiceExporter>();
         
-        Map<String, ServiceExporter> beans = wac.getBeansOfType(ServiceExporter.class);
+        Map<String, ServiceExporter> beans = getServiceExporters();
+        
         if (beans != null) {
             Collection<ServiceExporter> services = beans.values();
             for (ServiceExporter idlServiceExporter : services) {

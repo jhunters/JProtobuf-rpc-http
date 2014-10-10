@@ -15,7 +15,14 @@
  */
 package com.baidu.jprotobuf.rpc.client;
 
+import junit.framework.Assert;
+
 import org.junit.Test;
+
+import com.baidu.bjf.remoting.protobuf.IDLProxyObject;
+import com.baidu.jprotobuf.rpc.server.AnnotationServiceExporter;
+import com.baidu.jprotobuf.rpc.server.ServerInvoker;
+import com.baidu.jprotobuf.rpc.server.ServiceExporter;
 
 /**
  * 
@@ -23,14 +30,14 @@ import org.junit.Test;
  * @author xiemalin
  * @since 1.1.0
  */
-public class AnnotationProxyFactoryBeanTest {
+public class AnnotationProxyFactoryBeanTest extends ProxyFactoryBeanTestBase {
 
     @Test
     public void testClientProxy() throws Exception {
         AnnotationProxyFactoryBean<StringMessagePOJO, StringMessagePOJO> factoryBean;
         
         factoryBean = new AnnotationProxyFactoryBean<StringMessagePOJO, StringMessagePOJO>();
-        factoryBean.setServiceUrl("http://localhost:8080/myfirstproject/remoting/SimpleIDLTest2");
+        factoryBean.setServiceUrl("http://localhost:8080/SimpleIDLTest");
         
         factoryBean.setInputClass(StringMessagePOJO.class);
         factoryBean.setOutputClass(StringMessagePOJO.class);
@@ -46,7 +53,42 @@ public class AnnotationProxyFactoryBeanTest {
         
         StringMessagePOJO output = invoker.invoke(input);
         if (output != null) {
-            System.out.println(output.getList());
+            Assert.assertEquals("hello world", output.getList());
         }
+    }
+
+    /* (non-Javadoc)
+     * @see com.baidu.jprotobuf.rpc.client.ProxyFactoryBeanTestBase#doCreateServiceExporter()
+     */
+    @Override
+    protected ServiceExporter doCreateServiceExporter() {
+        AnnotationServiceExporter exporter = new AnnotationServiceExporter();
+        exporter.setInputClass(StringMessagePOJO.class);
+        exporter.setOutputClass(StringMessagePOJO.class);
+        
+        exporter.setServiceName("SimpleIDLTest");
+        exporter.setInvoker(new ServerInvoker() {
+
+            @Override
+            public void invoke(IDLProxyObject input, IDLProxyObject output) throws Exception {
+                Assert.assertNotNull(input);
+                Assert.assertEquals("how are you!", input.get("list"));
+
+                if (output != null) {
+                    output.put("list", "hello world");
+                }
+            }
+        });
+        try {
+            exporter.afterPropertiesSet();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return exporter;
+    }
+    
+    @Override
+    protected String getPathInfo() {
+        return "/SimpleIDLTest";
     }
 }
