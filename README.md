@@ -15,7 +15,7 @@ Spring 3.0+
 
 ### RPC服务的发布 ###
 
-a 在Spring配置文件，定义IDLServiceExporter服务发布配置 
+a1 在Spring配置文件，定义IDLServiceExporter服务发布配置 (直接由IDL定义发布)
 
 ```xml
 	<bean class="com.baidu.jprotobuf.rpc.server.IDLServiceExporter">
@@ -30,6 +30,26 @@ a 在Spring配置文件，定义IDLServiceExporter服务发布配置
 <pre>
 inputIDL 属性表示接收的protobuf协议定义
 outputIDL 属性表示返回的protobuf协议定义
+serviceName 服务名称，必须填写。 在服务的servlet发布后，服务名称会以path路径方式查找
+invoker 服务回调实现，必须实现 com.baidu.jprotobuf.rpc.server.ServerInvoker接口
+</pre>
+
+
+a2 在Spring配置文件，定义AnnotationServiceExporter服务发布配置 (通过Jprotobuf注解类发布)
+
+```xml
+	<bean class="com.baidu.jprotobuf.rpc.server.AnnotationServiceExporter">
+		<property name="serviceName" value="SimpleIDLTest2"></property>
+		<property name="invoker" ref="simpleIDLInvoker"></property>
+		<property name="inputClass" value="com.baidu.bjf.StringMessagePOJO"></property>
+		<property name="outputClass" value="com.baidu.bjf.StringMessagePOJO"></property>	
+	</bean>
+
+	<bean id="simpleIDLInvoker" class="com.baidu.bjf.SimpleIDLInvoker"></bean>
+```
+<pre>
+inputClass 属性表示接收的JProtobuf注解POJO类
+outputClass 属性表示返回的JProtobuf注解POJO类
 serviceName 服务名称，必须填写。 在服务的servlet发布后，服务名称会以path路径方式查找
 invoker 服务回调实现，必须实现 com.baidu.jprotobuf.rpc.server.ServerInvoker接口
 </pre>
