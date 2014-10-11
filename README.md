@@ -1,8 +1,8 @@
 jprotobuf-rpc-http
 =========
 
-jprotobuf-rpc-http 是应用jprotobuf类库实现基于http协议的RPC开发组件。
-目前1.0提供可以直接把Google protobuf的IDL定义语言发布成RPC服务，客户端也可以直接应用IDL定义语言进行动态创建，帮助开发完全省去了手工编译protobuf IDL语言的麻烦。
+jprotobuf-rpc-http 是应用jprotobuf类库实现基于http协议的RPC开发组件。<br>
+现可支持直接把Google protobuf的IDL定义语言发布成RPC服务，客户端也可以直接应用IDL定义语言进行动态创建，帮助开发完全省去了手工编译protobuf IDL语言的麻烦。
 
 jprotobuf文档：[https://github.com/jhunters/jprotobuf](https://github.com/jhunters/jprotobuf)
 
@@ -245,6 +245,37 @@ message StringMessage2 {
 	</bean>
 ```
 
+### 应用JDK6 httpserver 直接发布RPC服务实现 ###
+JDK6之后已经内置了httpserver的服务功能，应用该功能可以直接发布RPC服务，而不需要再使用其它三方的web容器。
+
+演示的代码如下：
+```java
+    @Test
+    public void testRPCRequest() {
+        HttpRPCServer httpRPCServer = null;
+        try {
+            // 创建RPC Server  指定端口
+            httpRPCServer = new HttpRPCServer(8080, 10);
+
+            
+            //新增RPC服务
+            HttpServerRequestHandler httpHandler = new HttpServerRequestHandler(serviceExporter);
+            httpRPCServer.addRPCHandler(httpHandler);
+            
+            //启动 RPC Server
+            //启动，RPC服务url地址为: http://localhost:8080/{serviceExporter.getServiceName}
+            httpRPCServer.start();
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (httpRPCServer != null) {
+                httpRPCServer.stop(0);
+            }
+        }
+    }
+```
+完整的测试代码详见源码中 HttpRPCServerTest.java
 
 ## 联系我们 ##
 

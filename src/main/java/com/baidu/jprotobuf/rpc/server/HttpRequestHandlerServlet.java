@@ -21,7 +21,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -34,6 +33,9 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import com.baidu.bjf.remoting.protobuf.IDLProxyObject;
 
 /**
+ * Simple HttpServlet that delegates to an {@link ServiceExporter} bean defined
+ * in Spring's root web application context. The target bean name must match the
+ * HttpRequestHandlerServlet servlet-name as defined in <code>web.xml</code>.
  *
  * @author xiemalin
  * @since 1.0.0
