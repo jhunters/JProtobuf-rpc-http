@@ -18,6 +18,7 @@ package com.baidu.jprotobuf.rpc.server;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URI;
 
 import com.baidu.bjf.remoting.protobuf.IDLProxyObject;
 import com.baidu.jprotobuf.rpc.support.IOUtils;
@@ -76,6 +77,23 @@ public class HttpServerRequestHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
         
+        URI requestURI = httpExchange.getRequestURI();
+        String query = requestURI.getQuery();
+        if (query != null) {
+            if (query.indexOf(ServiceExporter.INPUT_IDL_PARAMETER) != -1) {
+                if (serviceExporter.getInputIDL() != null) {
+                    writeResponse(httpExchange, serviceExporter.getInputIDL().getBytes());
+                    return;
+                }
+            } else if (query.indexOf(ServiceExporter.OUTPUT_IDL_PARAMETER) != -1) {
+                {
+                    if (serviceExporter.getOutputIDL() != null) {
+                        writeResponse(httpExchange, serviceExporter.getOutputIDL().getBytes());
+                        return;
+                    }
+                }
+            }
+        }     
         InputStream requestBody = httpExchange.getRequestBody();
         byte[] requestBytes = IOUtils.toByteArray(requestBody);
         
@@ -100,6 +118,18 @@ public class HttpServerRequestHandler implements HttpHandler {
                 out.write(bytes);
             }
         }
+        out.flush();
+        httpExchange.close();
+    }
+
+    /**
+     * @param httpExchange
+     * @throws IOException
+     */
+    private void writeResponse(HttpExchange httpExchange, byte[] content) throws IOException {
+        httpExchange.sendResponseHeaders(CONTENT_LENGTH, content.length);
+        OutputStream out = httpExchange.getResponseBody(); // 获得输出流
+        out.write(content);
         out.flush();
         httpExchange.close();
     }

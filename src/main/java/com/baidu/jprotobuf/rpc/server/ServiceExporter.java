@@ -26,7 +26,16 @@ import com.baidu.bjf.remoting.protobuf.IDLProxyObject;
  * @see HttpRequestHandlerServlet
  */
 public interface ServiceExporter {
+    
+    /**
+     * input IDL request
+     */
+    String INPUT_IDL_PARAMETER = "INPUT_IDL";
 
+    /**
+     * output IDL request
+     */
+    String OUTPUT_IDL_PARAMETER = "OUTPUT_IDL";
     
     /**
      * execute service action.
@@ -51,4 +60,14 @@ public interface ServiceExporter {
      * @return
      */
     String getServiceName() ;
+    
+    /**
+     * @return input protobuf IDL content
+     */
+    String getInputIDL();
+    
+    /**
+     * @return output protobuf IDL content
+     */
+    String getOutputIDL();
 }

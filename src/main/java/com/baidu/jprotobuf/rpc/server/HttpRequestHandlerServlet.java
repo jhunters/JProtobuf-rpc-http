@@ -96,6 +96,27 @@ public class HttpRequestHandlerServlet extends HttpServlet {
         try {
             ServiceExporter idlServiceExporter = serviceMap.get(context);
             
+            //to check if a get idl request 
+            if (request.getParameter(ServiceExporter.INPUT_IDL_PARAMETER) != null) {
+                
+                String inputIDL = idlServiceExporter.getInputIDL();
+                if (inputIDL !=  null) {
+                    response.setContentLength(inputIDL.length());
+                    response.getOutputStream().write(inputIDL.getBytes());
+                    
+                    return;
+                }
+                
+            } else if (request.getParameter(ServiceExporter.OUTPUT_IDL_PARAMETER) != null) {
+                String outputIDL = idlServiceExporter.getOutputIDL();
+                if (outputIDL !=  null) {
+                    response.setContentLength(outputIDL.length());
+                    response.getOutputStream().write(outputIDL.getBytes());
+                    
+                    return;
+                }
+            }
+            
             IDLProxyObject inputIDLProxyObject = idlServiceExporter.getInputProxyObject();
             IDLProxyObject input = null;
             if (inputIDLProxyObject != null && request.getContentLength() > 0) {
@@ -103,7 +124,6 @@ public class HttpRequestHandlerServlet extends HttpServlet {
                         .getContentLength());
                 input = inputIDLProxyObject.decode(bytes);
             }
-            
             
             IDLProxyObject result = idlServiceExporter.execute(input);
             if (result != null) {
@@ -113,8 +133,7 @@ public class HttpRequestHandlerServlet extends HttpServlet {
             }
         } catch (Exception ex) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
-        }
-        finally {
+        } finally {
             response.getOutputStream().flush();
             response.getOutputStream().close();
         }

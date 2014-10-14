@@ -49,6 +49,10 @@ public class IDLServiceExporter extends AbstractServiceExporter implements Initi
     private IDLProxyObject inputIDLProxyObject;
 
     private IDLProxyObject outputIDLProxyObject;
+    
+    private String inputIDLStr;
+    
+    private String outputIDLStr;
 
     /*
      * (non-Javadoc)
@@ -61,11 +65,10 @@ public class IDLServiceExporter extends AbstractServiceExporter implements Initi
         Assert.notNull(getInvoker(), "property 'invoker' is null.");
         Assert.hasText(getServiceName(), "property 'serviceName' is blank.");
         
-        String inputIDLStr = null;
         if (inputIDL != null) {
             inputIDLStr = IOUtils.toString(inputIDL.getInputStream());
         }
-        String outputIDLStr = null;
+        
         if (outputIDL != null) {
             outputIDLStr = IOUtils.toString(outputIDL.getInputStream());
         }
@@ -153,6 +156,22 @@ public class IDLServiceExporter extends AbstractServiceExporter implements Initi
      */
     public void setOutputIDL(Resource outputIDL) {
         this.outputIDL = outputIDL;
+    }
+
+    /* (non-Javadoc)
+     * @see com.baidu.jprotobuf.rpc.server.ServiceExporter#getInputIDL()
+     */
+    @Override
+    public String getInputIDL() {
+        return inputIDLStr;
+    }
+
+    /* (non-Javadoc)
+     * @see com.baidu.jprotobuf.rpc.server.ServiceExporter#getOutputIDL()
+     */
+    @Override
+    public String getOutputIDL() {
+        return outputIDLStr;
     }
     
     

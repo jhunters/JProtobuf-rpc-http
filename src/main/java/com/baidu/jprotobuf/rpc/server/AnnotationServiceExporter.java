@@ -20,6 +20,7 @@ import org.springframework.util.Assert;
 
 import com.baidu.bjf.remoting.protobuf.Codec;
 import com.baidu.bjf.remoting.protobuf.IDLProxyObject;
+import com.baidu.bjf.remoting.protobuf.ProtobufIDLGenerator;
 import com.baidu.bjf.remoting.protobuf.ProtobufProxy;
 
 /**
@@ -37,6 +38,10 @@ public class AnnotationServiceExporter extends AbstractServiceExporter implement
     
     private Class<?> inputClass;
     private Class<?> outputClass;
+    
+    private String inputIDLStr;
+    
+    private String outputIDLStr;
 
     /*
      * (non-Javadoc)
@@ -88,11 +93,15 @@ public class AnnotationServiceExporter extends AbstractServiceExporter implement
             Codec inputCodec = ProtobufProxy.create(inputClass);
             Object input = inputClass.newInstance();
             inputIDLProxyObject = new IDLProxyObject(inputCodec, input, inputClass);
+            
+            inputIDLStr = ProtobufIDLGenerator.getIDL(inputClass);
         }
         if (outputClass != null) {
             Codec outputCodec = ProtobufProxy.create(outputClass);
             Object output = outputClass.newInstance();
             outputIDLProxyObject = new IDLProxyObject(outputCodec, output, outputClass);
+            
+            outputIDLStr = ProtobufIDLGenerator.getIDL(outputClass);
         }
     }
 
@@ -118,6 +127,22 @@ public class AnnotationServiceExporter extends AbstractServiceExporter implement
      */
     public void setInputClass(Class<?> inputClass) {
         this.inputClass = inputClass;
+    }
+
+    /* (non-Javadoc)
+     * @see com.baidu.jprotobuf.rpc.server.ServiceExporter#getInputIDL()
+     */
+    @Override
+    public String getInputIDL() {
+        return inputIDLStr;
+    }
+
+    /* (non-Javadoc)
+     * @see com.baidu.jprotobuf.rpc.server.ServiceExporter#getOutputIDL()
+     */
+    @Override
+    public String getOutputIDL() {
+        return outputIDLStr;
     }
 
     
