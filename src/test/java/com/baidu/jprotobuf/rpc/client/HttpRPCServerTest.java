@@ -54,18 +54,7 @@ public class HttpRPCServerTest {
             //启动，RPC服务url地址为: http://localhost:8080/{serviceExporter.getServiceName}
             httpRPCServer.start();
             
-            HttpURLConnection connection = (HttpURLConnection) new URL("http://localhost:8080/SimpleIDLTest?" + ServiceExporter.INPUT_IDL_PARAMETER + "=aa").openConnection();
-            connection.connect();
-            byte[] readResponse = readResponse(connection);
-            
-            Assert.assertEquals(serviceExporter.getInputIDL(), new String(readResponse));
-            
-            connection = (HttpURLConnection) new URL("http://localhost:8080/SimpleIDLTest?" + ServiceExporter.OUTPUT_IDL_PARAMETER + "=aa").openConnection();
-            connection.connect();
-            readResponse = readResponse(connection);
-            
-            Assert.assertEquals(serviceExporter.getOutputIDL(), new String(readResponse));
-            
+            testIDLClientQuery(serviceExporter.getInputIDL(), serviceExporter.getOutputIDL());
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -74,6 +63,20 @@ public class HttpRPCServerTest {
                 httpRPCServer.stop(0);
             }
         }
+    }
+    
+    protected void testIDLClientQuery(String inputIDL, String outputIDL) throws Exception {
+        HttpURLConnection connection = (HttpURLConnection) new URL("http://localhost:8080/SimpleIDLTest?" + ServiceExporter.INPUT_IDL_PARAMETER + "=aa").openConnection();
+        connection.connect();
+        byte[] readResponse = readResponse(connection);
+        
+        Assert.assertEquals(inputIDL, new String(readResponse));
+        
+        connection = (HttpURLConnection) new URL("http://localhost:8080/SimpleIDLTest?" + ServiceExporter.OUTPUT_IDL_PARAMETER + "=aa").openConnection();
+        connection.connect();
+        readResponse = readResponse(connection);
+        
+        Assert.assertEquals(outputIDL, new String(readResponse));
     }
 
     /**

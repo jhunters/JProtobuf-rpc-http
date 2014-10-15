@@ -31,6 +31,35 @@ import com.baidu.jprotobuf.rpc.server.ServiceExporter;
  * @since 1.1.0
  */
 public class AnnotationProxyFactoryBeanTest extends ProxyFactoryBeanTestBase {
+    
+    @Test
+    public void testRPCRequestIDL() throws Exception {
+        HttpRPCServerTest test = new HttpRPCServerTest();
+        
+        AnnotationServiceExporter exporter = new AnnotationServiceExporter();
+        exporter.setInputClass(StringMessagePOJO.class);
+        exporter.setOutputClass(StringMessagePOJO.class);
+        
+        exporter.setServiceName("SimpleIDLTest");
+        exporter.setInvoker(new ServerInvoker() {
+
+            @Override
+            public void invoke(IDLProxyObject input, IDLProxyObject output) throws Exception {
+                Assert.assertNotNull(input);
+                Assert.assertEquals("how are you!", input.get("list"));
+
+                if (output != null) {
+                    output.put("list", "hello world");
+                }
+            }
+        });
+        try {
+            exporter.afterPropertiesSet();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        test.testIDLClientQuery(exporter.getInputIDL(), exporter.getOutputIDL());
+    }
 
     @Test
     public void testClientProxy() throws Exception {

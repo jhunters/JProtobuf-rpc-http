@@ -95,7 +95,19 @@ public abstract class ProxyFactoryBeanTestBase {
 
                 MockHttpServletRequest request = new MockHttpServletRequest();
                 request.setPathInfo(getPathInfo());
-
+                
+                String queryString = httpExchange.getRequestURI().getRawQuery();
+                
+                if (queryString != null) {
+                    if (queryString.indexOf(ServiceExporter.INPUT_IDL_PARAMETER) != -1) {
+                        request.addParameter(ServiceExporter.INPUT_IDL_PARAMETER, "");
+                    }
+                    if (queryString.indexOf(ServiceExporter.OUTPUT_IDL_PARAMETER) != -1) {
+                        request.addParameter(ServiceExporter.OUTPUT_IDL_PARAMETER, "");
+                    }
+                }
+                
+                request.setQueryString(queryString);
                 InputStream requestBody = httpExchange.getRequestBody();
                 request.setContent(IOUtils.toByteArray(requestBody));
 

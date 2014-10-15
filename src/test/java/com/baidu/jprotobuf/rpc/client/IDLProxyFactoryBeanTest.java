@@ -63,6 +63,12 @@ public class IDLProxyFactoryBeanTest extends ProxyFactoryBeanTestBase {
         }
         return exporter;
     }
+    
+    @Test
+    public void testRPCRequestIDL() throws Exception {
+        HttpRPCServerTest test = new HttpRPCServerTest();
+        test.testIDLClientQuery(idl, idl);
+    }
 
     @Test
     public void testProxyFactoryBean() throws Exception {
