@@ -34,8 +34,8 @@ public class IDLProxyFactoryBeanTest extends ProxyFactoryBeanTestBase {
 
     String idl = "package pkg; "
             + "option java_package = \"com.baidu.bjf.remoting.protobuf.simplestring\";"
-            + "option java_outer_classname = \"StringTypeClass\";"
-            + "message StringMessage { required string list = 1;}  ";
+            + "option java_outer_classname = \"StringTypeClass2\";"
+            + "message StringMessage2 { required string list = 1;}  ";
 
     ByteArrayResource resource = new ByteArrayResource(idl.getBytes());
 
@@ -77,8 +77,8 @@ public class IDLProxyFactoryBeanTest extends ProxyFactoryBeanTestBase {
         proxyFactoryBean.setServiceUrl("http://localhost:8080/SimpleIDLTest");
         proxyFactoryBean.setInputIDL(resource);
         proxyFactoryBean.setOutputIDL(resource);
-        proxyFactoryBean.setInputIDLObjectName("StringMessage");
-        proxyFactoryBean.setOutputIDLObjectName("StringMessage");
+        proxyFactoryBean.setInputIDLObjectName("StringMessage2");
+        proxyFactoryBean.setOutputIDLObjectName("StringMessage2");
         proxyFactoryBean.afterPropertiesSet();
         ClientInvoker<IDLProxyObject, IDLProxyObject> invoker = proxyFactoryBean.getObject();
 
